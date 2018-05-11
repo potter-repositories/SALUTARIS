@@ -24,7 +24,7 @@ public class Maquina extends Dispositivo implements Serializable
 
     public boolean equals(Dispositivo maquina)
     {
-        if(super.ID.equals(((Maquina)maquina).getID()))
+        if(ID.equals(maquina.getID()))
         {
             return true;
         }

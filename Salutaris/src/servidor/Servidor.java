@@ -42,18 +42,21 @@ public class Servidor
             ObjectOutputStream desligar = null;
             for (int i = 0; i < coldis.getColMaq().qtdDisp(); i++)
             {
-                IP = ((Maquina) coldis.getColMaq().getDispositivo(i)).getEndereco();
-                try
-                {
-                    disposistivo = new Socket(IP, 55000);
-                    desligar = new ObjectOutputStream(disposistivo.getOutputStream());
-                    desligar.writeObject(new Comando("maq01w"));
-                    desligar.close();
-                }
-                catch (IOException e)
-                {
-                    System.err.println(e.getMessage());
-                }
+            	if(((Maquina) coldis.getColMaq().getDispositivo(i)).getExcecao() != true)
+            	{
+            		IP = ((Maquina) coldis.getColMaq().getDispositivo(i)).getEndereco();
+            		try
+                	{
+                    	disposistivo = new Socket(IP, 55000);
+                    	desligar = new ObjectOutputStream(disposistivo.getOutputStream());
+                    	desligar.writeObject(new Comando("maq01w"));
+                    	desligar.close();
+                	}
+                	catch (IOException e)
+                	{
+                		System.err.println(e.getMessage());
+                	}
+            	}
             }
         }
     }

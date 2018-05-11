@@ -13,7 +13,7 @@ public class ColecaoDispositivos implements Serializable
     {
         for(int i = 0; i < dispositivos.size(); i++)
         {
-            if(dispositivos.get(i).equals(dispositivo))
+        	if(dispositivos.get(i).getID().equals(dispositivo.getID()))
             {
                 dispositivos.remove(i);
                 break;
