@@ -15,7 +15,7 @@ public class Servidor
     public static void main(String[] args) throws Exception
     {
         ColecaoDispositivos coldis = null;
-        String IP = "10.0.2.158";
+        String IP = "192.168.142.1";
         coldis = adquirirColdis(coldis, IP);
         if (args[0].equals("Exibir"))
         {
@@ -49,7 +49,7 @@ public class Servidor
                 	{
                     	disposistivo = new Socket(IP, 55000);
                     	desligar = new ObjectOutputStream(disposistivo.getOutputStream());
-                    	desligar.writeObject(new Comando("maq01w"));
+                    	desligar.writeObject(new Comando("Desligar"));
                     	desligar.close();
                 	}
                 	catch (IOException e)
@@ -76,7 +76,6 @@ public class Servidor
             oout.writeObject(new Bloco("Informática"));
             oout.writeObject(new Sala("Sala de Apoio à Informática 04"));
             coldis = (ColecaoDispositivos) oin.readObject();
-            coldis.listagemDispositivos();
             atualiza.close();
         }
         catch(Exception e)

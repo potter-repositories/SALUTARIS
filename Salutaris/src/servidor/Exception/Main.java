@@ -17,8 +17,7 @@ public class Main
         coldis = adquirirColdis(coldis, IP);
         for(int i = 0; i < args.length; i++)
         {
-            String ID = coldis.pesquisaIDMaquina(args[i]);
-            Maquina maquina = coldis.pesquisaMaquina(ID);
+            Maquina maquina = coldis.pesquisaMaquina(args[i]);
             ObjectOutputStream oout;
             try
             {

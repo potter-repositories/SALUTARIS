@@ -16,6 +16,8 @@ public class Cliente
 
     public static void main(String[] args) throws UnknownHostException
     {
+    	ApplyException exception = new ApplyException();
+    	exception.start();
         String ID = GetNetworkAddress.GetAddress("mac");
         String endereco = GetNetworkAddress.GetAddress("ip");
         String nome;

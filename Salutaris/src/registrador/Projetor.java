@@ -19,7 +19,7 @@ public class Projetor extends Dispositivo implements Serializable
         {
             comandosFormatados += comandos.get(i);
         }
-        return "Projetor\nID: " + super.ID + "\nNome: " + super.nome + "\nEndereço: " + super.endereco + "\nTecnologia: " + super.tecnologia + "\nComandos: " + comandosFormatados;
+        return "Projetor\nID: " + super.ID + "\nNome: " + super.nome + "\nEndereço: " + super.endereco + "\nTecnologia: " + super.tecnologia + "\nComandos: " + comandosFormatados + "\nExceção: " + super.excecao;
     }
 
     public boolean equals(Dispositivo projetor)

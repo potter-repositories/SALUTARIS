@@ -19,7 +19,7 @@ public class ArCondicionado extends Dispositivo implements Serializable
         {
             comandosFormatados += comandos.get(i);
         }
-        return "Ar Condicionado\nID: " + super.ID + "\nNome: " + super.nome + "\nEndereço: " + super.endereco + "\nTecnologia: " + super.tecnologia + "\nComandos: " + comandosFormatados;
+        return "Ar Condicionado\nID: " + super.ID + "\nNome: " + super.nome + "\nEndereço: " + super.endereco + "\nTecnologia: " + super.tecnologia + "\nComandos: " + comandosFormatados + "\nExceção: " + super.excecao;
     }
 
     public boolean equals(Dispositivo arCondicionado)

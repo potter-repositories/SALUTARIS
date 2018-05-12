@@ -44,7 +44,7 @@ public abstract class Dispositivo implements Serializable
 
     public void setTecnologia(String tecnologia) { this.tecnologia = tecnologia; }
 
-    public void setExecao(boolean excecao) { this.excecao = excecao; }
+    public void setExcecao(boolean excecao) { this.excecao = excecao; }
 
     public void setComandos(ArrayList<Comando> comandos) { this.comandos = comandos; }
 }

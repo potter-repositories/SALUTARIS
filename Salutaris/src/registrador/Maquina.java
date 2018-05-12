@@ -19,7 +19,7 @@ public class Maquina extends Dispositivo implements Serializable
         {
             comandosFormatados += comandos.get(i);
         }
-        return "Máquina\nID: " + super.ID + "\nNome: " + super.nome + "\nEndereço: " + super.endereco + "\nTecnologia: " + super.tecnologia + "\nComandos: " + comandosFormatados;
+        return "Máquina\nID: " + super.ID + "\nNome: " + super.nome + "\nEndereço: " + super.endereco + "\nTecnologia: " + super.tecnologia + "\nComandos: " + comandosFormatados + "\nExceção: " + super.excecao;
     }
 
     public boolean equals(Dispositivo maquina)
