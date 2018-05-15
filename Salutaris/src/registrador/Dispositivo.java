@@ -20,7 +20,7 @@ public abstract class Dispositivo implements Serializable
         this.nome = nome;
         this.endereco = endereco;
         this.tecnologia = tecnologia;
-        this.excecao = false;
+        this.excecao = true;
         this.comandos = comandos;
     }
 

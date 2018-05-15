@@ -26,7 +26,7 @@ public class Cliente
         comandos.add(new Comando("maq01"));
         Maquina maquina;
         nome = InetAddress.getByName(endereco).getCanonicalHostName();
-        String hostIP = "10.0.2.158";
+        String hostIP = "192.168.142.1";
         int hostPort = 60500;
         maquina = new Maquina(ID, nome, endereco, tecnologia, comandos);
         Socket cliente = null;
