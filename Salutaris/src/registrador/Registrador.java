@@ -1,8 +1,10 @@
 package registrador;
 
 import servidor.Comando;
-
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -12,13 +14,10 @@ public class Registrador
     {
         Scanner input = new Scanner(System.in);
         ColecaoInstituicoes colinst;
-        Atualiza update = null;
         colinst = new ColecaoInstituicoes();
         try
         {
             colinst.recuperArquivo();
-            update = new Atualiza();
-            update.start();
         }
         catch(Exception e)
         {
@@ -42,18 +41,22 @@ public class Registrador
                 case 1:
                     while(menuInstituicoes(input,colinst));
                     colinst.gravaArquivo();
+                    atualizaServidor(colinst);
                     return true;
                 case 2:
                     while(menuBlocos(input,colinst));
                     colinst.gravaArquivo();
+                    atualizaServidor(colinst);
                     return true;
                 case 3:
                     while(menuSalas(input,colinst));
                     colinst.gravaArquivo();
+                    atualizaServidor(colinst);
                     return true;
                 case 4:
                     while(menuDispositivos(input,colinst));
                     colinst.gravaArquivo();
+                    atualizaServidor(colinst);
                     return true;
                 default:
                     return false;
@@ -726,7 +729,6 @@ public class Registrador
 
     private static int lerOpcao(Scanner input, int iniciall, int finall)
     {
-
         int opcao;
         if(!input.hasNextInt())
         {
@@ -742,5 +744,25 @@ public class Registrador
             return lerOpcao(input,iniciall,finall);
         }
         return opcao;
+    }
+    
+    public static void atualizaServidor(ColecaoInstituicoes colinst) throws Exception
+    {
+    	colinst.recuperArquivo();
+        Socket clienteServ = null;
+        ObjectInputStream oinServ = null;
+        ObjectOutputStream ooutServ = null;
+        clienteServ = new Socket("IP do Servidor",48000);
+        oinServ = new ObjectInputStream(clienteServ.getInputStream());
+        ooutServ = new ObjectOutputStream(clienteServ.getOutputStream());
+        ooutServ.writeObject(new Stringo("SEND"));
+        Instituicao inst = colinst.procuraInstEns((InstituicaoEnsino)(oinServ.readObject()));
+        Bloco bloco = inst.getColblo().pesquisaPeloNome(((Bloco)oinServ.readObject()).getNome());
+        Sala sala = bloco.getColsal().pesquisaPeloNome(((Sala)oinServ.readObject()).getNome());
+        ColecaoDispositivos coldis = sala.getColdis();
+        ooutServ.writeObject(coldis);
+        oinServ.close();
+        ooutServ.close();
+        clienteServ.close();
     }
 }

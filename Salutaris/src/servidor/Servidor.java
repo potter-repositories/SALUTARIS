@@ -10,78 +10,84 @@ import java.net.Socket;
 import java.util.GregorianCalendar;
 import java.util.Scanner;
 
+import cliente.GetNetworkAddress;
+
 public class Servidor
-{
+{	
     public static void main(String[] args) throws Exception
     {
         ColecaoDispositivos coldis = null;
         String IP = "192.168.142.1";
-        coldis = adquirirColdis(coldis, IP);
-        if (args[0].equals("Exibir"))
-        {
-            if (args[1].equals("Dispositivos"))
-            {
-                coldis.listagemDispositivos();
-            }
-            else if (args[1].equals("Maquinas"))
-            {
-                coldis.listagemMaquinas();
-            }
-            else if (args[1].equals("ArCondicionados"))
-            {
-                coldis.listagemArCondicionados();
-            }
-            else if (args[1].equals("Projetores"))
-            {
-                coldis.listagemProjetores();
-            }
-        }
-        else if (args[0].equals("Desligar"))
-        {
-            Socket disposistivo = null;
-            ObjectOutputStream desligar = null;
-            for (int i = 0; i < coldis.getColMaq().qtdDisp(); i++)
-            {
-            	if(((Maquina) coldis.getColMaq().getDispositivo(i)).getExcecao() != true)
-            	{
-            		IP = ((Maquina) coldis.getColMaq().getDispositivo(i)).getEndereco();
-            		try
-                	{
-                    	disposistivo = new Socket(IP, 55000);
-                    	desligar = new ObjectOutputStream(disposistivo.getOutputStream());
-                    	desligar.writeObject(new Comando("Desligar"));
-                    	desligar.close();
-                	}
-                	catch (IOException e)
-                	{
-                		System.err.println(e.getMessage());
-                	}
-            	}
-            }
-        }
+        RecebeAtualiza recAtu = new RecebeAtualiza(coldis,IP);
+        recAtu.start();
+        Scanner input = new Scanner(System.in);
+        menu(input,coldis, IP);
     }
-
-    public static ColecaoDispositivos adquirirColdis(ColecaoDispositivos coldis, String IP)
+    
+    public static void menu(Scanner input, ColecaoDispositivos coldis, String IP)
     {
-        Socket atualiza;
-        ObjectOutputStream oout;
-        ObjectInputStream oin;
-        try
+    	System.out.println("Escolha uma das opções abaixo:\n"
+    					 + "1 - Exibir Dispositivos\n"
+    					 + "2 - Exibir Máquinas\n"
+    					 + "3 - Exibir Condicionadores de Ar\n"
+    					 + "4 - Exibir Projetores"
+    					 + "5 - Desligar Dispositivos");
+    	int opcao = lerOpcao(input,1,5);
+    	switch(opcao)
+    	{
+    		case 1:
+    			coldis.listagemDispositivos();
+    			break;
+    		case 2:
+    			coldis.listagemMaquinas();
+    			break;
+    		case 3:
+    			coldis.listagemArCondicionados();
+    			break;
+    		case 4:
+    			coldis.listagemProjetores();
+    			break;
+    		case 5:
+    			Socket disposistivo = null;
+                ObjectOutputStream desligar = null;
+                for (int i = 0; i < coldis.getColMaq().qtdDisp(); i++)
+                {
+                	if(((Maquina) coldis.getColMaq().getDispositivo(i)).getExcecao() != true)
+                	{
+                		IP = ((Maquina) coldis.getColMaq().getDispositivo(i)).getEndereco();
+                		try
+                    	{
+                        	disposistivo = new Socket(IP, 55000);
+                        	desligar = new ObjectOutputStream(disposistivo.getOutputStream());
+                        	desligar.writeObject(new Comando("Desligar"));
+                        	desligar.close();
+                    	}
+                    	catch (IOException e)
+                    	{
+                    		System.err.println(e.getMessage());
+                    	}
+                	}
+                }                
+    	}
+    }
+    
+    private static int lerOpcao(Scanner input, int iniciall, int finall)
+    {
+
+        int opcao;
+        if(!input.hasNextInt())
         {
-            atualiza = new Socket(IP, 51000);
-            oout = new ObjectOutputStream(atualiza.getOutputStream());
-            oin = new ObjectInputStream(atualiza.getInputStream());
-            oout.writeObject(new Stringo("true"));
-            oout.writeObject(new InstituicaoEnsino("IFPB","João Pessoa","João Pessoa"));
-            oout.writeObject(new Bloco("Informática"));
-            oout.writeObject(new Sala("Sala de Apoio à Informática 04"));
-            coldis = (ColecaoDispositivos) oin.readObject();
-            atualiza.close();
+            System.out.printf("Digite um número válido: \n");
+            input.nextLine();
+            return lerOpcao(input,iniciall,finall);
         }
-        catch(Exception e)
+        opcao = input.nextInt();
+        input.nextLine();
+        if(opcao < iniciall || opcao > finall)
         {
-            System.err.println(e.getMessage());
+            System.out.printf("Digite um número entre '" + iniciall + "' e '" + finall + "' : \n");
+            return lerOpcao(input,iniciall,finall);
         }
-        return coldis;
+        return opcao;
     }
 }
