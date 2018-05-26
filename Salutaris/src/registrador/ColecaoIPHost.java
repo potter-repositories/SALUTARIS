@@ -26,6 +26,16 @@ public class ColecaoIPHost implements Serializable
 		return true;
 	}
 	
+	public IPHost getIPHost(int i)
+	{
+		return colIPHost.get(i);
+	}
+	
+	public int qtdIPHost()
+	{
+		return colIPHost.size();
+	}
+	
 	public boolean removerIPHost(IPHost iphost)
 	{
 		for(int i = 0; i < colIPHost.size(); i++)

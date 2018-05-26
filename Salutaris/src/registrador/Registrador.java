@@ -14,19 +14,22 @@ public class Registrador
     {
         Scanner input = new Scanner(System.in);
         ColecaoInstituicoes colinst;
+        ColecaoIPHost colIPHost = new ColecaoIPHost();
+        RegistraServidores regServ;
         colinst = new ColecaoInstituicoes();
         try
         {
+        	regServ = new RegistraServidores(colIPHost);
             colinst.recuperArquivo();
         }
         catch(Exception e)
         {
             System.err.println(e.getMessage());
         }
-        while(menu(input,colinst));
+        while(menu(input,colinst, colIPHost));
     }
 
-    private static boolean menu(Scanner input, ColecaoInstituicoes colinst)
+    private static boolean menu(Scanner input, ColecaoInstituicoes colinst, ColecaoIPHost colIPHost)
     {
         System.out.println("Escolha uma das opções abaixo:\n" +
                            "1 - Menu Instituições\n" +
@@ -41,22 +44,22 @@ public class Registrador
                 case 1:
                     while(menuInstituicoes(input,colinst));
                     colinst.gravaArquivo();
-                    atualizaServidor(colinst);
+                    atualizaServidor(colinst, colIPHost);
                     return true;
                 case 2:
                     while(menuBlocos(input,colinst));
                     colinst.gravaArquivo();
-                    atualizaServidor(colinst);
+                    atualizaServidor(colinst, colIPHost);
                     return true;
                 case 3:
                     while(menuSalas(input,colinst));
                     colinst.gravaArquivo();
-                    atualizaServidor(colinst);
+                    atualizaServidor(colinst, colIPHost);
                     return true;
                 case 4:
                     while(menuDispositivos(input,colinst));
                     colinst.gravaArquivo();
-                    atualizaServidor(colinst);
+                    atualizaServidor(colinst, colIPHost);
                     return true;
                 default:
                     return false;
@@ -746,23 +749,26 @@ public class Registrador
         return opcao;
     }
     
-    public static void atualizaServidor(ColecaoInstituicoes colinst) throws Exception
+    public static void atualizaServidor(ColecaoInstituicoes colinst, ColecaoIPHost colIPHost) throws Exception
     {
     	colinst.recuperArquivo();
         Socket clienteServ = null;
         ObjectInputStream oinServ = null;
         ObjectOutputStream ooutServ = null;
-        clienteServ = new Socket("IP do Servidor",48000);
-        oinServ = new ObjectInputStream(clienteServ.getInputStream());
-        ooutServ = new ObjectOutputStream(clienteServ.getOutputStream());
-        ooutServ.writeObject(new Stringo("SEND"));
-        Instituicao inst = colinst.procuraInstEns((InstituicaoEnsino)(oinServ.readObject()));
-        Bloco bloco = inst.getColblo().pesquisaPeloNome(((Bloco)oinServ.readObject()).getNome());
-        Sala sala = bloco.getColsal().pesquisaPeloNome(((Sala)oinServ.readObject()).getNome());
-        ColecaoDispositivos coldis = sala.getColdis();
-        ooutServ.writeObject(coldis);
-        oinServ.close();
-        ooutServ.close();
-        clienteServ.close();
+        for(int i = 0; i < colIPHost.qtdIPHost(); i++)
+        {
+        	clienteServ = new Socket(colIPHost.getIPHost(i).getIP(),48000);
+        	oinServ = new ObjectInputStream(clienteServ.getInputStream());
+        	ooutServ = new ObjectOutputStream(clienteServ.getOutputStream());
+       		ooutServ.writeObject(new Stringo("SEND"));
+       		Instituicao inst = colinst.procuraInstEns((InstituicaoEnsino)(oinServ.readObject()));
+       		Bloco bloco = inst.getColblo().pesquisaPeloNome(((Bloco)oinServ.readObject()).getNome());
+       		Sala sala = bloco.getColsal().pesquisaPeloNome(((Sala)oinServ.readObject()).getNome());
+       		ColecaoDispositivos coldis = sala.getColdis();
+       		ooutServ.writeObject(coldis);
+       		oinServ.close();
+       		ooutServ.close();
+       		clienteServ.close();
+        }
     }
 }
